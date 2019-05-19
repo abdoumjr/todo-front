@@ -1,14 +1,14 @@
 <template>
 <div>
  <v-app id="inspire" dark>
-    <v-navigation-drawer
+    <v-navigation-drawer v-if="isLoggedIn"
       clipped
       fixed
       v-model="drawer"
       app
     >
       <v-list dense>
- <v-list-tile @click="">
+ <v-list-tile @click="" >
                 <v-list-tile-avatar>
             <img src="https://randomuser.me/api/portraits/men/85.jpg">
           </v-list-tile-avatar>
@@ -37,8 +37,14 @@
       </v-list>
     </v-navigation-drawer>
     <v-toolbar app fixed clipped-left>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="isLoggedIn"></v-toolbar-side-icon>
       <v-toolbar-title>Application</v-toolbar-title>
+    <v-spacer></v-spacer>
+          <v-toolbar-items class="clipped-right">
+            <v-btn v-if="!isLoggedIn" flat><router-link to="/login"> Login</router-link></v-btn>
+            <v-btn  v-if="!isLoggedIn" flat><router-link  to="/register"> Register</router-link></v-btn>
+            <v-btn  v-if="isLoggedIn" flat><router-link  to="/logout"> Logout</router-link></v-btn>
+    </v-toolbar-items>
     </v-toolbar>
 
     <v-content>
@@ -82,7 +88,10 @@ export default {
 },
 computed: {
     username () {
-        return this.$store.state.username
+      return this.$store.state.username
+    },
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn
     }
 },
 }
@@ -90,5 +99,8 @@ computed: {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+ a {
+    text-decoration: none;
+        color: #f6f6f6;
+}
 </style>

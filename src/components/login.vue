@@ -38,7 +38,11 @@ export default {
               password : this.password
           })
           .then(reponse => {
+              this.$swal("Great!", "You are logged in!", "success")
               this.$router.push('todo')
+          })
+          .catch(reponse => {
+             this.$swal("Oups ...", 'Email or password wrong !', "error")
           })
       }
   }
