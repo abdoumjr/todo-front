@@ -93,9 +93,9 @@ computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn
     },
-    refreshPage() {
-       return this.$store.dispatch('getGroups');
-    }
+     items : function() {
+      return this.$store.state.groups
+    } 
 },
 }
 </script>

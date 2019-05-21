@@ -22,7 +22,7 @@ Vue.use(VueSwal)
 
 const axios = axiosapi.create({
   baseURL:`http://127.0.0.1:8000/api`,
-  // headers:{ header:value }
+//   headers:{ Authorization: 'Bareer ' +  store.state.token }
 });
 
 window.axios = axios;

@@ -8,6 +8,9 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state : {
         todos : [],
+        groups : [],
+        current_group_id : localStorage.getItem('current_group_id') || null,
+        current_group_name : localStorage.getItem('current_group_name') || null,
         filter : 'all',
         token : localStorage.getItem('token') || null,
         username : localStorage.getItem('username') || null
@@ -27,8 +30,15 @@ export const store = new Vuex.Store({
             state.username = null
         },
         groups (state,data) {
-            console.log(data)
-        }
+            state.groups = data.data       
+         },
+         todos (state,data) {
+            state.todos = data.data       
+         },
+         setCurrentGroup (state,data){
+            state.current_group_id = data.group_id
+            state.current_group_name = data.name
+         }
     },
     actions:{
     login  (context,data) {
@@ -69,7 +79,6 @@ export const store = new Vuex.Store({
                     const token = response.data.success.token
                     const username = response.data.success.user_name
 
-                    console.log(username)
                     localStorage.setItem('token',token)
                     localStorage.setItem('username',username)
     
@@ -90,18 +99,42 @@ export const store = new Vuex.Store({
         localStorage.removeItem('username')
     },
     getGroups (context) {
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
         return new Promise((resolve,reject) => {
-            axios.defaults.headers.common['Authorization'] = 'Bareer ' + context.state.token;
             axios.get('/group')
             .then(response => {
 
-             context.commit('groups',response)
+             context.commit('groups',response.data)
                 resolve();
             })      
             .catch(error => {
-                reject(error.response)
+                reject(error)
             })
         })
+    },
+    getTodos (context,data) {
+
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+        return new Promise((resolve,reject) => {
+            axios.post('/todo',
+            {
+                id : context.state.current_group_id
+            })
+            .then(response => {
+
+             context.commit('todos',response.data)
+
+                resolve();
+            })      
+            .catch(error => {
+                reject(error)
+            })
+        })
+    },
+    setCurrentGroup(context,data){
+        localStorage.setItem('current_group_id',data.group_id)
+        localStorage.setItem('current_group_name',data.name)
+        context.commit('setCurrentGroup',data)
     }
     }
 })

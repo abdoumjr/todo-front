@@ -17,16 +17,16 @@
         <v-list>
           <template v-for="(item, index) in items">
             <v-list-tile
-              v-if="item.action"
-              :key="item.title"
-              @click=""
+              :key="item.id"
+              @click="setCurrentGroup(item)"
             >
               <v-list-tile-action>
                 <v-icon>group</v-icon>
               </v-list-tile-action>
 
               <v-list-tile-content>
-                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+                <div class="v-list__tile__sub-title">Owner : {{ item.owner }}</div>
               </v-list-tile-content>
             </v-list-tile>
 
@@ -39,22 +39,33 @@
 <script>
 export default {
   name: 'Group',
-  props: {
-    msg: String
-  },
 	 data () {
       return {
-        items: []
+      // items: []
 			}
 		},
 		methods: {
 			getGroups() {
-						this.$store.dispatch('getGroups');
-						console.log('group')
-			}
+				this.$store.dispatch('getGroups');
+      },
+      setCurrentGroup(data){
+        this.$store.dispatch('setCurrentGroup',data)
+        .then(reponse => {
+              this.$router.push('todo')
+          })
+          .catch(reponse => {
+             this.$swal("Oups ...", 'Something went wrong please refresh page and try again!', "error")
+          })
+      }
 			},
-		computed: {
-		},
+  beforeMount(){
+      this.getGroups()
+  },
+  computed: {
+    items () {
+      return this.$store.state.groups
+    }
+  },
 }
 </script>
 
