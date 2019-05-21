@@ -45,7 +45,7 @@ export default {
           })
           .then(reponse => {
                this.$swal("Welcome!", "You are now registred!", "success")
-              this.$router.push('todo')
+              this.$router.push('group')
           })
           .catch(error => {
              this.$swal("Oups ...", error.data.error.join('\r\n'), "error")

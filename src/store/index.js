@@ -14,7 +14,6 @@ export const store = new Vuex.Store({
     },
     getters : {
         isLoggedIn (state){
-            console.log('khra')
             return state.token !== null
            }
     },
@@ -26,6 +25,9 @@ export const store = new Vuex.Store({
         logout (state){
             state.token = null
             state.username = null
+        },
+        groups (state,data) {
+            console.log(data)
         }
     },
     actions:{
@@ -46,6 +48,7 @@ export const store = new Vuex.Store({
                     token : token,
                     username : username
                 })
+
                 resolve();
             })      
             .catch(error => {
@@ -86,5 +89,19 @@ export const store = new Vuex.Store({
         localStorage.removeItem('token')
         localStorage.removeItem('username')
     },
+    getGroups (context) {
+        return new Promise((resolve,reject) => {
+            axios.defaults.headers.common['Authorization'] = 'Bareer ' + context.state.token;
+            axios.get('/group')
+            .then(response => {
+
+             context.commit('groups',response)
+                resolve();
+            })      
+            .catch(error => {
+                reject(error.response)
+            })
+        })
+    }
     }
 })

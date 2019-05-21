@@ -49,8 +49,8 @@
 
     <v-content>
       <v-container fluid fill-height>
-        <v-layout justify-center align-center>
-            <v-flex xs12 sm8 md4>
+        <v-layout justify-center >
+            <v-flex xs12 sm12 md12>
 
                 <router-view></router-view>
 
@@ -92,6 +92,9 @@ computed: {
     },
     isLoggedIn() {
       return this.$store.getters.isLoggedIn
+    },
+    refreshPage() {
+       return this.$store.dispatch('getGroups');
     }
 },
 }

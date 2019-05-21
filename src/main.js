@@ -28,11 +28,11 @@ const axios = axiosapi.create({
 window.axios = axios;
 
 const routes = [
-  {  path : '/group', component : Group  },
-  {  path : '/todo', component : Todo  },
-  {  path : '/login', component : login  },
-  {  path : '/register', component : register  },
-  {  path : '/logout', component : logout  },
+  {  path : '/group', component : Group , meta : {requiresAuth : true}  },
+  {  path : '/todo', component : Todo , meta : {requiresAuth : true} },
+  {  path : '/login', component : login , meta : {requiresGuest : true} },
+  {  path : '/register', component : register , meta : {requiresGuest : true} },
+  {  path : '/logout', component : logout , meta : {requiresAuth : true}  },
 ];
 
 const router = new VueRouter ({
@@ -41,15 +41,23 @@ const router = new VueRouter ({
 
 router.beforeEach((to, from, next) => {
   if(to.matched.some(record => record.meta.requiresAuth)){
-  if(!store.getters.loggedIn){
+  if(!store.getters.isLoggedIn){
     next({
-      path : '/login',
-      query : {redirecxt : to.fullPath}
+      path : 'login',
     })
    } else {
       next()
     }
-  } else {
+  } else  if(to.matched.some(record => record.meta.requiresGuest)){
+    if(store.getters.isLoggedIn){
+      next({
+        path : 'group',
+      })
+     } else {
+        next()
+      }
+    }
+     else {
     next()
   }
 })
