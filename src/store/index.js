@@ -108,12 +108,11 @@ export const store = new Vuex.Store({
                 resolve();
             })      
             .catch(error => {
-                reject(error)
+                reject(error.response)
             })
         })
     },
-    getTodos (context,data) {
-
+    getTodos (context) {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
         return new Promise((resolve,reject) => {
             axios.post('/todo',
@@ -121,7 +120,6 @@ export const store = new Vuex.Store({
                 id : context.state.current_group_id
             })
             .then(response => {
-
              context.commit('todos',response.data)
 
                 resolve();
@@ -135,6 +133,24 @@ export const store = new Vuex.Store({
         localStorage.setItem('current_group_id',data.group_id)
         localStorage.setItem('current_group_name',data.name)
         context.commit('setCurrentGroup',data)
+    },
+    addTodo(context,data){
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+        return new Promise((resolve,reject) => {
+            axios.post('/todo/create',
+            {
+                todo : data.newTodoValue,
+                title : data.newTodoTitle,
+                group_id : context.state.current_group_id
+            })
+            .then(response => {
+             context.dispatch('getTodos',data)
+                resolve(response.data);
+            })      
+            .catch(error => {
+                reject(error.response)
+            })
+        })
     }
     }
 })
