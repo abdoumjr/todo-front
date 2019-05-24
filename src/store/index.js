@@ -13,7 +13,8 @@ export const store = new Vuex.Store({
         current_group_name : localStorage.getItem('current_group_name') || null,
         filter : 'all',
         token : localStorage.getItem('token') || null,
-        username : localStorage.getItem('username') || null
+        username : localStorage.getItem('username') || null,
+        snack : ''
     },
     getters : {
         isLoggedIn (state){
@@ -38,7 +39,11 @@ export const store = new Vuex.Store({
          setCurrentGroup (state,data){
             state.current_group_id = data.group_id
             state.current_group_name = data.name
-         }
+         },
+         setSnack (state, snack) {
+            state.snack = snack.data
+            setTimeout(function () { state.snack = '' }.bind(this), 2000)
+            },
     },
     actions:{
     login  (context,data) {
@@ -144,13 +149,33 @@ export const store = new Vuex.Store({
                 group_id : context.state.current_group_id
             })
             .then(response => {
-             context.dispatch('getTodos',data)
+             context.dispatch('getTodos')
                 resolve(response.data);
+                context.commit('setSnack',response.data)
             })      
             .catch(error => {
                 reject(error.response)
             })
         })
-    }
+    },
+    todoStateChange(context,data){
+        console.log(data.toTodoState == 'doing' ? '1' : '2')
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+        return new Promise((resolve,reject) => {
+            axios.post('/todo/update_status',
+            {
+                todo_id : data.id,
+                new_status : data.toTodoState == 'doing' ? '1' : '2'
+            })
+            .then(response => {
+             context.dispatch('getTodos')
+                resolve(response.data);
+                context.commit('setSnack',response.data)           
+             })      
+            .catch(error => {
+                reject(error.response)
+            })
+        })
+    },
     }
 })

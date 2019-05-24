@@ -53,6 +53,7 @@
             <v-flex xs12 sm12 md12>
 
                 <router-view></router-view>
+                <snackbar></snackbar>
 
           </v-flex>
         </v-layout>
@@ -69,6 +70,8 @@
 import Todo from './Todo.vue'
 import Group from './Group.vue'
 import login from './login.vue'
+import snackbar from './snackbar.vue'
+
 
 export default {
   name: 'Main',
@@ -76,7 +79,8 @@ export default {
     /* eslint-disable vue/no-unused-components */
     Todo,
     Group,
-    login
+    login,
+    snackbar
   },
   props: {
     msg: String
@@ -84,6 +88,7 @@ export default {
   data() {
     return {
       drawer: true,
+      snackbar : this.$store.state.snackbar
     }
 },
 computed: {

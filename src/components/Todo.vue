@@ -25,6 +25,7 @@
             >   
               <v-icon>add</v-icon>
             </v-btn>
+            
                </template>
       <v-card>
         <v-card-title>
@@ -45,8 +46,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click="addTodo">Save</v-btn>
+          <v-btn color="blue darken-1" flat @click.stop="dialog = false">Close</v-btn>
+          <v-btn color="blue darken-1" flat @click.stop="addTodo">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -56,7 +57,7 @@
         <template>
           <v-list-tile v-for="item in items" :key="item.id">
             <v-list-tile-action>
-             <v-checkbox v-model="item.done" ></v-checkbox>
+             <v-checkbox v-model="item.done" v-on:click.stop="todoStateChange(item.id,'done')"></v-checkbox>
             </v-list-tile-action>
 
             <v-list-tile-content >
@@ -65,10 +66,10 @@
             </v-list-tile-content>
                           <v-list-tile-action>
                   <div class="text-xs-center">
-             <v-btn fab dark small v-if="item.doing" color="cyan">
+             <v-btn fab dark small v-if="item.doing" color="cyan" v-on:click.stop="todoStateChange(item.id,'doing')">
               <v-icon dark>edit</v-icon>
             </v-btn>
-               <v-btn fab dark small v-else >
+                <v-btn fab dark small v-else  v-on:click.stop="todoStateChange(item.id,'doing')">
               <v-icon dark>edit</v-icon>
             </v-btn>
             </div>
@@ -112,10 +113,23 @@ export default {
             })    
           .then(response => {
              this.dialog = false;
-             this.$swal("Great", response.data, "success")
+         //    this.$swal("Great", response.data, "success")
           })
           .catch(error => {
              this.$swal("Oups ...",  error.data.error.join('\r\n'), "error")
+          })
+        },
+          todoStateChange (id,toTodoState) {
+          this.$store.dispatch('todoStateChange',{
+            id : id,
+            toTodoState: toTodoState,
+            })    
+          .then(response => {
+          //this.dialog = false;
+          //   this.$swal("Great", response.data, "success")
+          })
+          .catch(error => {
+           //  this.$swal("Oups ...",  error.data.error.join('\r\n'), "error")
           })
         }
   },
