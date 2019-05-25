@@ -14,7 +14,20 @@
 				<v-flex xs12 sm12 md12>
             <v-list-tile-title >{{username}}</v-list-tile-title>
 			</v-flex>
-		</v-layout>
+        <div class="text-xs-center mt-2">
+       <router-link to="invites">
+    <v-badge left overlap>
+      <template v-slot:badge>
+        <span>{{total_invites}}</span>
+      </template>
+   <v-icon color="grey lighten-1" medium>
+        account_circle
+      </v-icon>  
+        </v-badge>
+</router-link>
+    &nbsp;&nbsp;
+    </div>
+	</v-layout>
 		</v-container>
       <v-list dense>
 					 <router-link to="group">
@@ -61,7 +74,8 @@ export default {
 	},
 	data() {
 		return {
-			  drawer: true,
+        drawer: true,
+        total_invites :''
 		}
 	},
 	computed: {
@@ -75,6 +89,17 @@ export default {
       return this.$store.state.groups
     } 
 },
+beforeMount(){
+  if(this.isLoggedIn){
+  this.$store.dispatch('getInvites')
+    .then(reponse => {
+          this.total_invites = this.$store.state.total_invites
+          })
+          .catch(reponse => {
+             this.$swal("Oups ...", 'Something went wrong please refresh page and try again!', "error")
+          })
+}
+  }
 }
 </script>
 

@@ -18,6 +18,7 @@
     <v-flex xs4 md4 class="px-5 py-3">       
      <v-btn  color="primary" flat icon Outlined  @click.stop="setCurrentGroup(item)"> <v-icon>list_alt</v-icon></v-btn>
      <showGroupPopop :group="item"></showGroupPopop>
+      <inviteMember v-if="item.owner == username" :group="item"></inviteMember>
 </v-flex>
   </v-layout>
 </v-container>
@@ -28,15 +29,17 @@
 <script>
 import addGroupPopop from './addGroupPopop'
 import showGroupPopop from './showGroupPopop'
+import inviteMember from './inviteMember'
 export default {
   name: 'Group',
   components: {
     addGroupPopop,
-    showGroupPopop
+    showGroupPopop,
+    inviteMember
   },
 	 data () {
       return {
-      // items: []
+       username: ''
 			}
 		},
 		methods: {
@@ -55,6 +58,7 @@ export default {
 			},
   beforeMount(){
       this.getGroups()
+      this.username = this.$store.state.username
   },
   computed: {
     items () {

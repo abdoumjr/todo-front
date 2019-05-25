@@ -11,6 +11,7 @@ import Vuetify from 'vuetify'
 import axiosapi from 'axios'
 import { store } from './store/index.js'
 import VueSwal from 'vue-swal'
+import invites from './components/invites'
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
 
@@ -33,6 +34,7 @@ const routes = [
   {  path : '/login', component : login , meta : {requiresGuest : true} },
   {  path : '/register', component : register , meta : {requiresGuest : true} },
   {  path : '/logout', component : logout , meta : {requiresAuth : true}  },
+  {  path : '/invites', component : invites , meta : {requiresAuth : true}  },
 ];
 
 const router = new VueRouter ({

@@ -1,6 +1,7 @@
 <template>
 <div>
-  <v-card class="elevation-12">
+  <v-container>
+<v-card class="elevation-12" >
               <v-toolbar dark color="primary">
                 <v-toolbar-title>Register form</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -18,6 +19,8 @@
                 <v-btn color="primary" v-on:click="login">Login</v-btn>
               </v-card-actions>
             </v-card>
+  </v-container>
+  
     </div>
 </template>
 

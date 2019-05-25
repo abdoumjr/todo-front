@@ -31,12 +31,14 @@ export const store = new Vuex.Store({
         snack : '',
         loader : false,
         loaderMessage : '',
-        groupUsers : ''
+        groupUsers : '',
+        invites : '',
+        total_invites : ''
     },
     getters : {
         isLoggedIn (state){
             return state.token !== null
-           }
+           },
     },
     mutations : {
         loggedIn  (state,data) {
@@ -67,6 +69,11 @@ export const store = new Vuex.Store({
         load (state,data) {
             state.loaderMessage = data.loaderMessage;
             state.loader = !state.loader
+        },
+        invites(state,invites){
+            console.log(invites)
+        state.invites = invites.data,
+        state.total_invites = invites.data.length
         }
     },
     actions:{
@@ -99,6 +106,9 @@ export const store = new Vuex.Store({
             })      
             .catch(error => {
                 reject()
+                context.commit('load',{
+                    loaderMessage : ''
+                });
             })
         })
         },
@@ -134,6 +144,9 @@ export const store = new Vuex.Store({
                 })      
                 .catch(error => {
                     reject(error.response)
+                    context.commit('load',{
+                        loaderMessage : ''
+                    })
                 })
             })
             },
@@ -167,6 +180,9 @@ export const store = new Vuex.Store({
             })      
             .catch(error => {
                 reject(error.response)
+                context.commit('load',{
+                    loaderMessage : ''
+                });
             })
         })
     },
@@ -335,6 +351,70 @@ export const store = new Vuex.Store({
                 });
                 reject(error.response)
 
+            })
+        })
+    },
+    inviteMember(context,data){
+        context.commit('load',{
+            loaderMessage : 'Sending the request ...'
+        });  
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+        return new Promise((resolve,reject) => {
+            axios.post('/invite/create',
+            {
+                user : data.user,
+                group_id: data.group_id
+            })
+            .then(response => {
+                context.commit('setSnack',response.data)
+                context.commit('load',{
+                    loaderMessage : ''
+                }); 
+                resolve(response.data);
+            })      
+            .catch(error => {
+                context.commit('load',{
+                    loaderMessage : ''
+                });
+                reject(error.response)
+
+            })
+        })
+    },
+    getInvites(context){
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+        return new Promise((resolve,reject) => {
+            axios.get('/invite')
+            .then(response => {
+                context.commit('invites',response.data);
+                resolve(response.data);
+            })      
+            .catch(error => {
+                reject(error.response)
+
+            })
+        })
+    },
+    acceptInvite(context,data){
+        context.commit('load',{
+            loaderMessage : 'Please wait ...'
+        });  
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+        return new Promise((resolve,reject) => {
+            axios.post('/invite/accept',{
+                id : data.id
+            })
+            .then(response => {
+                resolve(response.data);
+                context.commit('load',{
+                    loaderMessage : ''
+                });  
+            })      
+            .catch(error => {
+                reject(error.response)
+                context.commit('load',{
+                    loaderMessage : ''
+                });
             })
         })
     }
