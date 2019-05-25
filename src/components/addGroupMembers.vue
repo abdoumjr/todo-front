@@ -16,25 +16,22 @@
                     </template>
                   <v-card>
         <v-card-title>
-          <span class="headline">Add new Todo</span>
+          <span class="headline">Add new Member</span>
         </v-card-title>
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
                  <v-flex xs12>
-                <v-text-field label="Title*" v-model="newTodoTitle" required></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-textarea label="Todo*" v-model="newTodoValue" required></v-textarea>
+                <v-text-field label="Name*" v-model="username" required></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
-          <small>*Todo and title required fields</small>
+          <small>*Group name is a required fields</small>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click.stop="addTodo">Save</v-btn>
+          <v-btn color="blue darken-1" flat @click.stop="addGroup">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -46,15 +43,13 @@ export default {
     data() {
       return {
         dialog : false,
-        newTodoTitle : '',
-        newTodoValue : ''
+        newGroupName : '',
       }
     },
     methods : {
-          addTodo () {
-          this.$store.dispatch('addTodo',{
-            newTodoTitle : this.newTodoTitle,
-            newTodoValue : this.newTodoValue,
+          addGroup () {
+          this.$store.dispatch('addGroup',{
+            newGroupName : this.newGroupName,
             })    
           .then(response => {
           this.dialog = false;

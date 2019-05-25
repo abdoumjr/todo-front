@@ -16,7 +16,7 @@
           <v-flex xs3 md3 class="pl-5">Actions</v-flex>
           </v-layout>
           <v-layout row v-for="item in items" :key="item.id" align-center justify-start fill-heigh :class="item.status" >
-          <v-flex xs3 md3 class="pl-5">{{item.title }}</v-flex>
+          <v-flex xs3 md3 class="pl-5">{{item.title}}</v-flex>
           <v-flex xs3 md3 class="pl-5">{{item.value}}</v-flex>
           <v-flex xs3 md3 class="pl-5">
            <v-chip v-if="item.status == 'Pending'" color="primary" text-color="white">{{item.status}}</v-chip>
@@ -24,9 +24,8 @@
             <v-chip v-if="item.status == 'Ongoing'" color="orange" text-color="white">{{item.status}}</v-chip>
           </v-flex>
           <v-flex xs3 md3 class="pl-5">
-             <v-btn flat icon color="indigo">
-              <v-icon>star</v-icon>
-            </v-btn>
+            <showTodoPopop :todo='item'></showTodoPopop>
+            <editTodoPopop :todo='item'></editTodoPopop>
           </v-flex>
           </v-layout>
         </v-container>
@@ -37,10 +36,14 @@
 
 <script>
 import addTodoPopop from './addTodoPopop'
+import editTodoPopop from './editTodoPopop'
+import showTodoPopop from './showTodoPopop'
 export default {
   name: 'Todo',
   components : {
-   addTodoPopop
+   addTodoPopop,
+   editTodoPopop,
+   showTodoPopop
   },
   data () {
       return {
