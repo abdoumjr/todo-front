@@ -5,94 +5,45 @@
         <v-toolbar color="purple" dark>
 
           <v-toolbar-title>Todos</v-toolbar-title>
-
           <v-spacer></v-spacer>
-
-          <!-- <v-btn icon>
-            <v-icon>search</v-icon>
-          </v-btn> -->
-  
- <v-dialog v-model="dialog" persistent max-width="600px">
-        <template v-slot:activator="{ on }">
-          <v-btn
-              absolute
-              dark
-              fab
-              bottom
-              right
-              color="primary"
-              v-on="on"
-            >   
-              <v-icon>add</v-icon>
-            </v-btn>
-            
-               </template>
-      <v-card>
-        <v-card-title>
-          <span class="headline">Add new Todo</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
-                 <v-flex xs12>
-                <v-text-field label="Title*" v-model="newTodoTitle" required></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-textarea label="Todo*" v-model="newTodoValue" required></v-textarea>
-              </v-flex>
-            </v-layout>
-          </v-container>
-          <small>*Todo and title required fields</small>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click.stop="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click.stop="addTodo">Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+          <addTodoPopop></addTodoPopop>
         </v-toolbar>
-        <v-list>
-          <v-subheader>{{group_name}}</v-subheader>
-        <template>
-          <v-list-tile v-for="item in items" :key="item.id">
-            <v-list-tile-action>
-             <v-checkbox v-model="item.done" v-on:click.stop="todoStateChange(item.id,'done')"></v-checkbox>
-            </v-list-tile-action>
-
-            <v-list-tile-content >
-              <v-list-tile-title>{{item.title }} {{ item.status }}</v-list-tile-title>
-              <v-list-tile-sub-title>{{item.value}}</v-list-tile-sub-title>
-            </v-list-tile-content>
-                          <v-list-tile-action>
-                  <div class="text-xs-center">
-             <v-btn fab dark small v-if="item.doing" color="cyan" v-on:click.stop="todoStateChange(item.id,'doing')">
-              <v-icon dark>edit</v-icon>
+        <v-container>
+          <v-layout row align-center justify-start fill-heigh>
+          <v-flex xs3 md3 class="pl-5">Title</v-flex>
+          <v-flex xs3 md3 class="pl-5">description</v-flex>
+          <v-flex xs3 md3 class="pl-5">Status</v-flex>
+          <v-flex xs3 md3 class="pl-5">Actions</v-flex>
+          </v-layout>
+          <v-layout row v-for="item in items" :key="item.id" align-center justify-start fill-heigh :class="item.status" >
+          <v-flex xs3 md3 class="pl-5">{{item.title }}</v-flex>
+          <v-flex xs3 md3 class="pl-5">{{item.value}}</v-flex>
+          <v-flex xs3 md3 class="pl-5">
+           <v-chip v-if="item.status == 'Pending'" color="primary" text-color="white">{{item.status}}</v-chip>
+            <v-chip v-if="item.status == 'Complete'" color="green" text-color="white">{{item.status}}</v-chip>
+            <v-chip v-if="item.status == 'Ongoing'" color="orange" text-color="white">{{item.status}}</v-chip>
+          </v-flex>
+          <v-flex xs3 md3 class="pl-5">
+             <v-btn flat icon color="indigo">
+              <v-icon>star</v-icon>
             </v-btn>
-                <v-btn fab dark small v-else  v-on:click.stop="todoStateChange(item.id,'doing')">
-              <v-icon dark>edit</v-icon>
-            </v-btn>
-            </div>
-              </v-list-tile-action>
-
-          </v-list-tile>
-       </template>
-        </v-list>
-
-
+          </v-flex>
+          </v-layout>
+        </v-container>
       </v-card>
 
 </div>
 </template>
 
 <script>
+import addTodoPopop from './addTodoPopop'
 export default {
   name: 'Todo',
+  components : {
+   addTodoPopop
+  },
   data () {
       return {
-      newTodoValue: '',
-      newTodoTitle: '',
-      dialog : false,
       }
   },
   methods : {
@@ -106,23 +57,22 @@ export default {
              this.$router.push('group')
          })
     },
-        addTodo () {
-          this.$store.dispatch('addTodo',{
-            newTodoValue : this.newTodoValue,
-            newTodoTitle : this.newTodoTitle
-            })    
-          .then(response => {
-             this.dialog = false;
-         //    this.$swal("Great", response.data, "success")
-          })
-          .catch(error => {
-             this.$swal("Oups ...",  error.data.error.join('\r\n'), "error")
-          })
-        },
           todoStateChange (id,toTodoState) {
           this.$store.dispatch('todoStateChange',{
             id : id,
             toTodoState: toTodoState,
+            })    
+          .then(response => {
+          //this.dialog = false;
+          //   this.$swal("Great", response.data, "success")
+          })
+          .catch(error => {
+           //  this.$swal("Oups ...",  error.data.error.join('\r\n'), "error")
+          })
+        },
+        updateTodo() {
+             this.$store.dispatch('updateTodo',{
+            id : id,
             })    
           .then(response => {
           //this.dialog = false;
@@ -146,8 +96,24 @@ export default {
   },
 }
 </script>
+<style>
+.flex {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.Pending {
+    border-left: solid 3px #1677CF;
+  }
+  .Complete {
+    border-left: solid 3px #4baf50;
+  }
+   .Ongoing {
+    border-left: solid 3px #ff9800;
+  }
+  .v-chip .v-chip__content { 
+    height: 20px !important
+  }
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
 
 </style>

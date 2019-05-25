@@ -159,7 +159,6 @@ export const store = new Vuex.Store({
         })
     },
     todoStateChange(context,data){
-        console.log(data.toTodoState == 'doing' ? '1' : '2')
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
         return new Promise((resolve,reject) => {
             axios.post('/todo/update_status',
@@ -177,5 +176,23 @@ export const store = new Vuex.Store({
             })
         })
     },
+    updateTodo(context,data) {
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token;
+        return new Promise((resolve,reject) => {
+            axios.post('/todo/update',
+            {
+                todo_id : data.id,
+                new_status : data.toTodoState == 'doing' ? '1' : '2'
+            })
+            .then(response => {
+             context.dispatch('getTodos')
+                resolve(response.data);
+                context.commit('setSnack',response.data)           
+             })      
+            .catch(error => {
+                reject(error.response)
+            })
+        })
+    }
     }
 })

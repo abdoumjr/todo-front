@@ -8,7 +8,7 @@
       app
     >
       <v-list dense>
- <v-list-tile @click="" >
+ <v-list-tile>
                 <v-list-tile-avatar>
             <img src="https://randomuser.me/api/portraits/men/85.jpg">
           </v-list-tile-avatar>
@@ -17,7 +17,7 @@
             <v-list-tile-title >{{username}}</v-list-tile-title>
           </v-list-tile-content>
            </v-list-tile>
-        <v-list-tile @click="">
+        <v-list-tile >
           
           <v-list-tile-action>
             <v-icon>dashboard</v-icon>
@@ -26,7 +26,7 @@
             <v-list-tile-title>Dashboard</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="">
+        <v-list-tile >
           <v-list-tile-action>
             <v-icon>list</v-icon>
           </v-list-tile-action>
@@ -106,9 +106,12 @@ computed: {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
  a {
     text-decoration: none;
         color: #f6f6f6;
+}
+.actions {
+  margin-right: 10px
 }
 </style>
