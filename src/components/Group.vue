@@ -1,44 +1,39 @@
 <template>
-
 <div>
-	
 <v-card>
         <v-toolbar color="teal" dark>
-
           <v-toolbar-title>Groups</v-toolbar-title>
-
-          <v-spacer></v-spacer>
-
-          <!-- <v-btn icon>
-            <v-icon>more_vert</v-icon>
-          </v-btn> -->
+        <addGroupPopop></addGroupPopop>
         </v-toolbar>
 
-        <v-list>
-          <template v-for="(item, index) in items">
-            <v-list-tile
-              :key="item.id"
-              @click="setCurrentGroup(item)"
-            >
-              <v-list-tile-action>
-                <v-icon>group</v-icon>
-              </v-list-tile-action>
-
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.name }}</v-list-tile-title>
-                <div class="v-list__tile__sub-title">Owner : {{ item.owner }}</div>
-              </v-list-tile-content>
-            </v-list-tile>
-
-          </template>
-        </v-list>
+<v-container>
+  <v-layout  row align-center justify-start fill-heigh>
+    <v-flex xs4 md4 class="px-5 py-3">Group</v-flex>
+    <v-flex xs4 md4 class="px-5 py-3">Owner</v-flex>
+    <v-flex  xs4 md4 class="px-5 py-3">Actons</v-flex>
+  </v-layout>
+   <v-layout r row align-center justify-start fill-heigh v-for="item in items"  :key="item.id">
+    <v-flex xs4 md4 class="px-5 py-3 ">{{ item.name }}</v-flex>
+    <v-flex xs4 md4 class="px-5 py-3"> {{ item.owner }}</v-flex>
+    <v-flex xs4 md4 class="px-5 py-3">       
+     <v-btn  color="primary" flat icon Outlined  @click.stop="setCurrentGroup(item)"> <v-icon>list_alt</v-icon></v-btn>
+     <showGroupPopop :group="item"></showGroupPopop>
+</v-flex>
+  </v-layout>
+</v-container>
       </v-card>
 </div>
 </template>
 
 <script>
+import addGroupPopop from './addGroupPopop'
+import showGroupPopop from './showGroupPopop'
 export default {
   name: 'Group',
+  components: {
+    addGroupPopop,
+    showGroupPopop
+  },
 	 data () {
       return {
       // items: []
@@ -71,5 +66,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.flex {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
 </style>
